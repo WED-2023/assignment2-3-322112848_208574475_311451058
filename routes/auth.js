@@ -15,13 +15,13 @@ router.post("/Register", async (req, res, next) => {
       lastname: req.body.lastname,
       country: req.body.country,
       password: req.body.password,
-      email: req.body.email,
+      email: req.body.email
       // profilePic: req.body.profilePic
     }
 
     
     let users = [];
-    users = await DButils.execQuery("SELECT username from users");
+    users = await DButils.execQuery("SELECT user_name from users");
 
     if (users.find((x) => x.username === user_details.username))
       throw { status: 409, message: "Username taken" };
@@ -32,8 +32,7 @@ router.post("/Register", async (req, res, next) => {
       parseInt(process.env.bcrypt_saltRounds)
     );
     await DButils.execQuery(
-      `INSERT INTO users VALUES ('${user_details.username}', '${user_details.firstname}', '${user_details.lastname}',
-      '${user_details.country}', '${hash_password}', '${user_details.email}')`
+      `INSERT INTO users (user_name, first_name, last_name, country, password, email) VALUES ('${user_details.username}', '${user_details.firstname}', '${user_details.lastname}', '${user_details.country}', '${hash_password}', '${user_details.email}')`
     );
     res.status(201).send({ message: "user created", success: true });
   } catch (error) {
@@ -44,14 +43,14 @@ router.post("/Register", async (req, res, next) => {
 router.post("/Login", async (req, res, next) => {
   try {
     // check that username exists
-    const users = await DButils.execQuery("SELECT username FROM users");
-    if (!users.find((x) => x.username === req.body.username))
+    const users = await DButils.execQuery("SELECT user_name FROM users");
+    if (!users.find((x) => x.user_name === req.body.username))
       throw { status: 401, message: "Username or Password incorrect" };
 
     // check that the password is correct
     const user = (
       await DButils.execQuery(
-        `SELECT * FROM users WHERE username = '${req.body.username}'`
+        `SELECT * FROM users WHERE user_name = '${req.body.username}'`
       )
     )[0];
 

@@ -1,13 +1,15 @@
-var mysql = require('mysql');
+var mysql = require('mysql2');
 require("dotenv").config();
 
 
+
 const config={
-connectionLimit:4,
-  host: process.env.host,//"localhost"
-  user: process.env.user,//"root"
-  password: "pass_root@123",
-  database:"mydb"
+
+  host: process.env.VUE_APP_host,
+  user: process.env.VUE_APP_user,
+  password: process.env.VUE_APP_password,
+  database: process.env.VUE_APP_database,
+  port: parseInt(process.env.VUE_APP_port, 10),
 }
 const pool = new mysql.createPool(config);
 
@@ -18,6 +20,7 @@ const connection =  () => {
     console.log("MySQL pool connected: threadId " + connection.threadId);
     const query = (sql, binding) => {
       return new Promise((resolve, reject) => {
+        console.log('trying')
          connection.query(sql, binding, (err, result) => {
            if (err) reject(err);
            resolve(result);
@@ -44,10 +47,3 @@ const query = (sql, binding) => {
   });
 };
 module.exports = { pool, connection, query };
-
-
-
-
-
-
-
