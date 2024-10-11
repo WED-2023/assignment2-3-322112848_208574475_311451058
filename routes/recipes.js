@@ -5,7 +5,7 @@ const recipes_utils = require("./utils/recipes_utils");
 router.get("/", (req, res) => res.send("im here"));
 
 /**
- * This path is for searching a recipe
+ * This path is for searching recipes
  */
 router.get("/search", async (req, res, next) => {
   try {
@@ -21,6 +21,9 @@ router.get("/search", async (req, res, next) => {
   }
 });
 
+/**
+ * This path returns recipes from the api
+ */
 router.get("/random", async (req, res, next) => {
   try {
     const results = await recipes_utils.randomRecipes();
